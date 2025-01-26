@@ -1,4 +1,7 @@
 import re
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "7"
+
 
 import torch
 from transformers import AutoTokenizer
@@ -7,9 +10,10 @@ from vllm import LLM, SamplingParams
 from prover.lean.verifier import Lean4ServerScheduler
 
 
-model_name = "deepseek-ai/DeepSeek-Prover-V1.5-RL"
+#model_name = "deepseek-ai/DeepSeek-Prover-V1.5-RL"
+model_name = "../models/deepseek-prover-RL"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = LLM(model=model_name, max_num_batched_tokens=8192, seed=1, trust_remote_code=True)
+model = LLM(model=model_name, max_num_batched_tokens=8192, seed=1, trust_remote_code=True, dtype="auto")
 
 lean4_scheduler = Lean4ServerScheduler(max_concurrent_requests=1, timeout=300, memory_limit=10, name='verifier')
 
